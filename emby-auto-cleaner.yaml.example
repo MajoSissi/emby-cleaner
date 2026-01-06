@@ -1,0 +1,39 @@
+# Emby服务配置
+emby:
+  # Emby服务器地址
+  url: "http://localhost:8096"
+  # Emby用户名
+  username: "user"
+  # Emby密码
+  password: "pass"
+
+# 清理规则配置
+cleanup:
+  # 删除多少天前观看的剧集（使用负数可以查看所有已观看剧集）
+  watched_days_ago: 1
+
+  # 每个剧集保留最近的多少集不删除
+  keep_latest_episodes: 5
+
+  # 只清理这些媒体库（留空表示所有媒体库）
+  library_names:
+    # - "电视剧"
+    # - "动画"
+
+  # 只清理包含这些标签的剧集（留空表示不筛选）
+  tag_filters:
+    # - "TV Series"
+
+  # 包含这些标签的剧集不会被删除（白名单）
+  protect_tags:
+    - "keep"
+    - "保护"
+
+  # 是否保护收藏的剧集不被删除
+  protect_favorites: true
+
+  # 是否为模拟运行（true只显示将要删除的文件，不实际删除）
+  dry_run: true
+
+  # 是否删除空文件夹
+  remove_empty_folders: true

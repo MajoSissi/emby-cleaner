@@ -40,6 +40,9 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
           CGO_ENABLED: 0
 
+      - name: Prepare config file
+        run: cp emby-auto-cleaner.yaml.example emby-auto-cleaner.yaml
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
