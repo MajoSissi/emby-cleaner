@@ -18,7 +18,7 @@
 
 ```bash
 # 编辑配置文件，填写你的Emby服务器地址、用户名和密码
-vim embyautocleaner.yaml  # 或使用其他编辑器
+vim emby-auto-cleaner.yaml  # 或使用其他编辑器
 ```
 
 2. 运行程序：
@@ -77,4 +77,4 @@ go build -o build/emby-auto-cleaner .
 - 手动构建：可在GitHub Actions页面手动触发
 - 只保留最新的5个工作流记录
 
-构建产物会发布到GitHub Releases。
+构建产物会上传到GitHub Actions Artifacts，保留30天。

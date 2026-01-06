@@ -95,20 +95,25 @@ func (c *EmbyClient) Authenticate(username, password string) error {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Emby-Client", "Emby Auto Cleaner")
+	req.Header.Set("X-Emby-Client-Version", "1.0")
+	req.Header.Set("X-Emby-Device-Name", "EmbyAutoCleaner")
+	req.Header.Set("X-Emby-Device-Id", "emby-auto-cleaner")
 
 	resp, err := c.client.Do(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("authentication failed: %s", resp.Status)
-	}
 
 	body, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
+
 	if err != nil {
 		return err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("authentication failed: %s, body: %s", resp.Status, string(body))
 	}
 
 	var result struct {
@@ -319,7 +324,7 @@ func isDirEmpty(path string) (bool, error) {
 }
 
 func main() {
-	configPath := "config.yaml"
+	configPath := "emby-auto-cleaner.yaml"
 	if len(os.Args) > 1 {
 		configPath = os.Args[1]
 	}
@@ -379,14 +384,29 @@ func main() {
 	fmt.Printf("找到 %d 个剧集\n", len(items))
 
 	watchedCutoff := time.Now().AddDate(0, 0, -config.Cleanup.WatchedDaysAgo)
+	fmt.Printf("观看截止时间: %s (watched_days_ago=%d)\n", watchedCutoff.Format("2006-01-02 15:04:05"), config.Cleanup.WatchedDaysAgo)
 
 	var itemsToDelete []EmbyItem
+	watchedCount := 0
 	for _, item := range items {
+		if item.UserData.Played {
+			watchedCount++
+		}
 		if shouldDelete(item, config, watchedCutoff) {
 			itemsToDelete = append(itemsToDelete, item)
 		}
 	}
 
+	fmt.Printf("已观看的剧集数: %d\n", watchedCount)
+	if watchedCount > 0 {
+		for _, item := range items {
+			if item.UserData.Played {
+				fmt.Printf("  - %s (S%02dE%02d) Played: %v, LastPlayed: %s, Path: %s\n",
+					item.SeriesName, item.ParentIndexNumber, item.IndexNumber,
+					item.UserData.Played, item.UserData.LastPlayedDate, item.Path)
+			}
+		}
+	}
 	fmt.Printf("准备删除 %d 个已观看剧集\n", len(itemsToDelete))
 
 	seriesEpisodes := make(map[string][]EmbyItem)

@@ -41,7 +41,7 @@ done
 # 复制配置文件到build目录
 echo ""
 echo "复制配置文件..."
-cp embyautocleaner.yaml build/
+cp emby-auto-cleaner.yaml build/
 
 echo ""
 echo "=== 所有构建完成 ==="

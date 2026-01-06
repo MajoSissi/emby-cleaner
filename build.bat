@@ -37,7 +37,7 @@ if %ERRORLEVEL% EQU 0 (
 REM 复制配置文件到build目录
 echo.
 echo 复制配置文件...
-copy embyautocleaner.yaml build\
+copy emby-auto-cleaner.yaml build\
 
 echo.
 echo === 所有构建完成 ===

@@ -1,6 +1,9 @@
 # Build directory
 build/
 
+# Configuration (contains sensitive info)
+emby-auto-cleaner.yaml
+
 # Go build files
 *.exe
 *.exe~
